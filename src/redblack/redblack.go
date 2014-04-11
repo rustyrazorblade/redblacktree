@@ -100,12 +100,26 @@ func (t *RedBlackTree) fixUp(n *Node) {
 		// if we hit, we rotate in the direction of the gp->p
 		// left rotation is 0
 		fmt.Println("zig zag detected", parent_node_side, this_node_side)
-		t.Rotate(n.parent, parent_node_side)
+		t.Rotate(parent, parent_node_side)
+		// replace the fixup
+		// t.fixUp(parent)
 		return
 	}
 
 	// case 5
 	// detect a LEFT LEFT or RIGHT RIGHT
+	if this_node_side == parent_node_side {
+		fmt.Println("Detected case 5, LEFT LEFT")
+		fmt.Println(this_node_side, parent_node_side)
+		// rotate the gp opposite direction as the side
+		t.Rotate(gp, not(this_node_side))
+		fmt.Println("Fixing GP currently %v", gp.red)
+		recolor(parent, 0)
+		recolor(gp, 1)
+		t.fixUp(gp)
+		fmt.Println("GP fixed color %v", gp.red)
+		return
+	}
 
 }
 
@@ -199,9 +213,10 @@ func (t *RedBlackTree) IsBalanced() bool {
 }
 
 func (n *Node) IsBalanced() bool {
-	if n.red == 0 {
+	if n.red == 1 {  // red node has to have 2 black children
 		// make sure the children are both black
 		if is_red(n.links[0]) || is_red(n.links[1]) {
+			fmt.Println("red w/ red children found")
 			return false
 		}
 	}

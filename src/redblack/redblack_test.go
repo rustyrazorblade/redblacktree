@@ -146,3 +146,15 @@ func (s *MySuite) TestIsBalance(c *C) {
 
 	c.Check(rb.IsBalanced(), Equals, true)
 }
+
+
+func (s *MySuite) TestSideSideRotation(c *C) {
+	rb := NewRedBlackTree()
+	rb.Insert(10)
+	new_root := rb.Insert(9)
+	rb.Insert(8)
+	// state of the tree
+	// 9 should be the new root
+	c.Check(rb.root, Equals, new_root)
+
+}
