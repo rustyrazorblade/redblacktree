@@ -134,5 +134,8 @@ func (s *MySuite) TestNot(c *C) {
 
 
 func (s *MySuite) TestIsBalance(c *C) {
+	rb := NewRedBlackTree()
+	PopulateTree(rb)
 
+	c.Check(rb.IsBalanced(), Equals, true)
 }

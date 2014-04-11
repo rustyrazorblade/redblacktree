@@ -52,13 +52,20 @@ func (rb *RedBlackTree) RotateRight(n *Node) {
 	}
 }
 
+func (t *RedBlackTree) fixUp(n *Node) {
+
+}
+
 func (rb *RedBlackTree) Insert(value int) *Node {
 	if rb.root == nil {
 		rb.root = NewNode(value)
-		rb.root.red = 1
+		rb.root.red = 0
 		return rb.root
 	}
 	inserted := rb.root.Insert(value)
+	if rb.balance {
+		rb.fixUp(inserted)
+	}
 	return inserted
 }
 
@@ -124,7 +131,21 @@ func not(i int) int {
 }
 
 func (t *RedBlackTree) IsBalanced() bool {
-	return false
+	if is_red(t.root) {
+		return false
+	}
+	return t.root.IsBalanced()
+
+}
+
+func (n *Node) IsBalanced() bool {
+	if n.red == 0 {
+		// make sure the children are both black
+		if is_red(n.links[0]) || is_red(n.links[1]) {
+			return false
+		}
+	}
+	return true
 }
 
 func is_red(n *Node) bool {
