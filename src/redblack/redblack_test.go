@@ -3,6 +3,7 @@ package redblack
 import (
 	"testing"
 	. "gopkg.in/check.v1"
+	"fmt"
 )
 
 func Test(t *testing.T) { TestingT(t) }
@@ -43,13 +44,18 @@ func PopulateTree(rb *RedBlackTree) *RedBlackTree {
 		1  4
 
 	 */
-	rb.Insert(10)
-	rb.Insert(5)
-	rb.Insert(6)
-	rb.Insert(3)
-	rb.Insert(1)
-	rb.Insert(4)
-	rb.Insert(11)
+	keys := []int{10, 5, 6, 3, 1, 4, 11}
+	for _, value := range keys {
+		fmt.Println(value)
+		rb.Insert(value)
+	}
+//	rb.Insert(10)
+//	rb.Insert(5)
+//	rb.Insert(6)
+//	rb.Insert(3)
+//	rb.Insert(1)
+//	rb.Insert(4)
+//	rb.Insert(11)
 	return rb
 }
 
@@ -127,14 +133,15 @@ func (s *MySuite) TestRotateRightAtRoot(c *C) {
 }
 
 func (s *MySuite) TestNot(c *C) {
-	c.Check(not(1), Equals, 0)
-	c.Check(not(0), Equals, 1)
+	c.Check(not(1), Equals, int8(0))
+	c.Check(not(0), Equals, int8(1))
 }
 
 
 
 func (s *MySuite) TestIsBalance(c *C) {
 	rb := NewRedBlackTree()
+	fmt.Println("Setting up IsBalance")
 	PopulateTree(rb)
 
 	c.Check(rb.IsBalanced(), Equals, true)

@@ -1,4 +1,7 @@
 package redblack
+import (
+	"fmt"
+)
 
 /*
 1. A node is either red or black.
@@ -51,11 +54,66 @@ func (rb *RedBlackTree) RotateRight(n *Node) {
 		rb.root = n.parent
 	}
 }
-
+func (t *RedBlackTree) Rotate(n *Node, dir int8) {
+	if dir == 0 {
+		t.RotateLeft(n)
+		return
+	}
+	t.RotateRight(n)
+}
 func (t *RedBlackTree) fixUp(n *Node) {
+	if n.parent == nil {
+		// root case
+		return
+	}
+	if !is_red(n.parent) {
+		// black parent, we're cool
+		return
+	}
+	// get grand parent
+
+	parent := n.parent
+	gp := parent.parent
+
+	uncle_op_side := btoi(gp.links[0] == parent)
+
+	uncle := gp.links[uncle_op_side]
+
+	if is_red(uncle) { // we know the parent is red already
+		// case 3 recolor
+		// repaint parent & uncle black, gp red
+		// then fixUp(gp)
+		recolor(parent,  0)
+		recolor(uncle, 0)
+		recolor(parent, 1)
+
+		t.fixUp(gp)
+		return
+	}
+	// we already know the parent is red, the uncle black
+	// case 4
+	// detect a zig zag
+	this_node_side := btoi(parent.links[1] == n)
+	parent_node_side := not(uncle_op_side)
+	if this_node_side != parent_node_side {
+		// we need to know the direction the parent & GP are swinging
+		// if we hit, we rotate in the direction of the gp->p
+		// left rotation is 0
+		fmt.Println("zig zag detected", parent_node_side, this_node_side)
+		t.Rotate(n.parent, not(parent_node_side))
+		return
+	}
+
+	// case 5
+	// detect a LEFT LEFT or RIGHT RIGHT
 
 }
 
+func recolor(n *Node, red int8) {
+	if n != nil {
+		n.red = red
+	}
+}
 func (rb *RedBlackTree) Insert(value int) *Node {
 	if rb.root == nil {
 		rb.root = NewNode(value)
@@ -69,7 +127,7 @@ func (rb *RedBlackTree) Insert(value int) *Node {
 	return inserted
 }
 
-func btoi(b bool) int {
+func btoi(b bool) int8 {
 	if b {
 		return 1
 	}
@@ -115,7 +173,7 @@ func (n *Node) Insert(value int) *Node {
 
 }
 
-func (n *Node) Rotate(dir int) {
+func (n *Node) Rotate(dir int8) {
 	// dir is direction, 0 left, 1 right
 	opposite_child := n.links[not(dir)]
 	affected_grandchild := opposite_child.links[dir]
@@ -124,7 +182,7 @@ func (n *Node) Rotate(dir int) {
 	n.parent = opposite_child
 }
 
-func not(i int) int {
+func not(i int8) int8 {
 	// stupid utility to flip 1/0 since we can't do !int checks
 	// i usually hate these 1 liners but it makes the array index more readable
 	return i ^ 1
