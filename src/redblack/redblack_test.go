@@ -78,7 +78,7 @@ func (s *MySuite) TestRotateRight(c *C) {
 	ten, _ := rb.Get(10)
 
 
-	five.RotateRight() // rotates on the 5
+	rb.RotateRight(five)
 	c.Check(five.links[0].value, Equals, 4)
 	c.Check(five.links[1].value, Equals, 6)
 	c.Check(three.parent, Equals, ten)
@@ -97,18 +97,33 @@ func (s *MySuite) TestRotateLeft(c *C) {
 	six, _ := rb.Get(6)
 	ten, _ := rb.Get(10)
 
-	five.RotateLeft()
+	rb.RotateLeft(five)
 	c.Check(five.parent, Equals, six)
 	c.Check(three.parent, Equals, five)
 	c.Check(six.parent, Equals, ten)
 }
 
-func (s *MySuite) TestRotateLeftNoLeaves(c *C) {
+func (s *MySuite) TestRotateLeftAtRoot(c *C) {
 	rb := NewTree()
 	PopulateTree(rb)
-	six, _ := rb.Get(6)
 
-	six.RotateLeft()
+	eleven, _ := rb.Get(11)
+	ten, _ := rb.Get(10)
+
+	rb.RotateLeft(ten)
+	c.Check(eleven, Equals, rb.root)
+
+}
+func (s *MySuite) TestRotateRightAtRoot(c *C) {
+	rb := NewTree()
+	PopulateTree(rb)
+
+	five, _ := rb.Get(5)
+	ten, _ := rb.Get(10)
+
+	rb.RotateRight(ten)
+	c.Check(five, Equals, rb.root)
+
 }
 
 func (s *MySuite) TestNot(c *C) {

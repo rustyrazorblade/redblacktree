@@ -12,12 +12,12 @@ type Node struct {
 	links [2]*Node // left = 0
 	parent *Node
 	value int
-	red bool
+	red int8
 }
 
 func NewNode(value int) *Node {
 	tmp := Node{value:value}
-	tmp.red = true
+	tmp.red = 1
 	return &tmp
 }
 
@@ -37,10 +37,25 @@ func NewTree() *RedBlackTree {
 	return &RedBlackTree{balance:false}
 }
 
+func (rb *RedBlackTree) RotateLeft(n *Node) {
+	n.Rotate(0)
+	if n == rb.root {
+		// no longer the root, stupid, the parent is
+		rb.root = n.parent
+	}
+}
+func (rb *RedBlackTree) RotateRight(n *Node) {
+	n.Rotate(1)
+	if n == rb.root {
+		// no longer the root, stupid, the parent is
+		rb.root = n.parent
+	}
+}
+
 func (rb *RedBlackTree) Insert(value int) *Node {
 	if rb.root == nil {
 		rb.root = NewNode(value)
-		rb.root.red = false
+		rb.root.red = 1
 		return rb.root
 	}
 	inserted := rb.root.Insert(value)
@@ -93,14 +108,6 @@ func (n *Node) Insert(value int) *Node {
 
 }
 
-func (n *Node) RotateLeft() {
-	n.Rotate(0)
-}
-
-func (n *Node) RotateRight() {
-	n.Rotate(1)
-}
-
 func (n *Node) Rotate(dir int) {
 	// dir is direction, 0 left, 1 right
 	opposite_child := n.links[not(dir)]
@@ -118,4 +125,8 @@ func not(i int) int {
 
 func (t *RedBlackTree) IsBalanced() bool {
 	return false
+}
+
+func is_red(n *Node) bool {
+	return n != nil && n.red == 1
 }
