@@ -100,7 +100,7 @@ func (t *RedBlackTree) fixUp(n *Node) {
 		// if we hit, we rotate in the direction of the gp->p
 		// left rotation is 0
 		fmt.Println("zig zag detected", parent_node_side, this_node_side)
-		t.Rotate(n.parent, not(parent_node_side))
+		t.Rotate(n.parent, parent_node_side)
 		return
 	}
 
@@ -175,11 +175,13 @@ func (n *Node) Insert(value int) *Node {
 
 func (n *Node) Rotate(dir int8) {
 	// dir is direction, 0 left, 1 right
+	fmt.Println("Rotation on ", n.value, dir)
 	opposite_child := n.links[not(dir)]
 	affected_grandchild := opposite_child.links[dir]
 	n.links[not(dir)] = affected_grandchild
 	opposite_child.parent = n.parent
 	n.parent = opposite_child
+
 }
 
 func not(i int8) int8 {
