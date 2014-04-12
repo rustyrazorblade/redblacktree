@@ -2,6 +2,7 @@ package redblack
 import (
 	"fmt"
 	"strings"
+	"log"
 )
 
 /*
@@ -261,7 +262,48 @@ func (n *Node) IsBalanced() bool {
 			return false
 		}
 	}
-	return true
+	// check the subtrees
+	_, ok := n.CountBlack(0)
+	return ok
+}
+
+func (n *Node) CountBlack(total int) (int, bool) {
+
+	var lc, rc int // left and right black count
+	var ok bool = true
+
+	// get a count in each direction
+	// compare
+	// return the count + if the current node is black
+
+	if n.links[0] == nil {
+		lc = 1
+	} else {
+		lc, ok = n.links[0].CountBlack(total)
+		if !ok {
+			log.Printf("left side count fail")
+			return 0, false
+		}
+	}
+
+	if n.links[1] == nil {
+		rc = 1
+	} else {
+		rc, ok = n.links[1].CountBlack(total)
+		if !ok {
+			log.Printf("right side count fail")
+			return 0, false
+		}
+
+	}
+
+	if lc == rc {
+		return lc + total, true
+	} else {
+		fmt.Printf("left %d right %d", lc, rc)
+		return 0, false
+	}
+
 }
 
 func is_red(n *Node) bool {

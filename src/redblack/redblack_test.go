@@ -200,3 +200,17 @@ func (s *MySuite) TestLeftLeftRotateRight(c *C) {
 	c.Check(rb.root.links[0], Equals, eight)
 	c.Check(rb.root.links[1], Equals, ten)
 }
+
+func (s *MySuite) TestBlackCount(c *C) {
+	t := NewTree()
+
+	n1 := t.Insert(10)
+	n2 := t.Insert(11)
+
+	n1.red = 0
+	n2.red = 1
+
+	_, ok := n1.CountBlack(0)
+	c.Check(ok, Equals, true)
+
+}
