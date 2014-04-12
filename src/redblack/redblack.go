@@ -2,7 +2,6 @@ package redblack
 import (
 	"fmt"
 	"strings"
-	"log"
 )
 
 /*
@@ -46,7 +45,6 @@ func (rb *RedBlackTree) RotateLeft(n *Node) {
 	n.Rotate(0)
 	if n == rb.root {
 		// no longer the root, stupid, the parent is
-		fmt.Printf("Setting new root to %v\n", n.parent)
 		rb.root = n.parent
 	}
 }
@@ -54,7 +52,6 @@ func (rb *RedBlackTree) RotateRight(n *Node) {
 	n.Rotate(1)
 	if n == rb.root {
 		// no longer the root, stupid, the parent is
-		fmt.Printf("Setting new root to %v\n", n.parent)
 		rb.root = n.parent
 	}
 }
@@ -103,7 +100,6 @@ func (t *RedBlackTree) fixUp(n *Node) {
 		// we need to know the direction the parent & GP are swinging
 		// if we hit, we rotate in the direction of the gp->p
 		// left rotation is 0
-		fmt.Println("zig zag detected", parent_node_side, this_node_side)
 		t.Rotate(parent, parent_node_side)
 		// recolor
 		// replace the fixup
@@ -117,7 +113,6 @@ func (t *RedBlackTree) fixUp(n *Node) {
 func (t *RedBlackTree) caseFive(n *Node) {
 	// case 5
 	// detect a LEFT LEFT or RIGHT RIGHT
-	fmt.Println("executing case 5 rotation on ", n)
 	parent := n.parent
 	gp := parent.parent
 
@@ -126,22 +121,17 @@ func (t *RedBlackTree) caseFive(n *Node) {
 	parent_node_side := not(uncle_op_side)
 
 	if this_node_side == parent_node_side {
-		fmt.Println("Detected case 5, LEFT LEFT")
-		fmt.Println(this_node_side, parent_node_side)
 		// rotate the gp opposite direction as the side
 		t.Rotate(gp, not(this_node_side))
-		fmt.Println("Fixing GP currently %v", gp.red)
 		recolor(parent, 0)
 		recolor(gp, 1)
 		t.fixUp(gp)
-		fmt.Println("GP fixed color %v", gp.red)
 		return
 	}
 }
 
 func recolor(n *Node, red int8) {
 	if n != nil {
-		fmt.Println("recolor value / is_red", n.value, red)
 		n.red = red
 	}
 }
@@ -208,8 +198,6 @@ func (n *Node) Rotate(dir int8) {
 	// dir is direction, 0 left, 1 right
 	// we're going to pretend this is a left rotation
 
-	fmt.Println("Rotation on ", n.value, dir)
-
 	right_child := n.links[not(dir)]
 	parent := n.parent
 
@@ -258,7 +246,6 @@ func (n *Node) IsBalanced() bool {
 	if n.red == 1 {  // red node has to have 2 black children
 		// make sure the children are both black
 		if is_red(n.links[0]) || is_red(n.links[1]) {
-			fmt.Println("red w/ red children found")
 			return false
 		}
 	}
@@ -281,7 +268,6 @@ func (n *Node) CountBlack(total int) (int, bool) {
 	} else {
 		lc, ok = n.links[0].CountBlack(total)
 		if !ok {
-			log.Printf("left side count fail")
 			return 0, false
 		}
 	}
@@ -291,7 +277,6 @@ func (n *Node) CountBlack(total int) (int, bool) {
 	} else {
 		rc, ok = n.links[1].CountBlack(total)
 		if !ok {
-			log.Printf("right side count fail")
 			return 0, false
 		}
 
@@ -300,7 +285,6 @@ func (n *Node) CountBlack(total int) (int, bool) {
 	if lc == rc {
 		return lc + total, true
 	} else {
-		fmt.Printf("left %d right %d", lc, rc)
 		return 0, false
 	}
 

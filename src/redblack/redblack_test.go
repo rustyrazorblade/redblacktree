@@ -214,3 +214,18 @@ func (s *MySuite) TestBlackCount(c *C) {
 	c.Check(ok, Equals, true)
 
 }
+
+var nodes int = 100
+func (s *MySuite) TestGiantRedBlackTree(c *C) {
+	t := NewRedBlackTree()
+	for k := 0; k < nodes; k++ {
+		t.Insert(k)
+	}
+}
+
+func (s *MySuite) TestGiantTree(c *C) {
+	t := NewTree()
+	for k := 0; k < nodes; k++ {
+		t.Insert(k)
+	}
+}
