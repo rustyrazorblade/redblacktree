@@ -184,3 +184,19 @@ func (s *MySuite) TestLeftRotateInZigZag(c *C) {
 	rb.RotateLeft(eight)
 	c.Check(eight, Equals, nine.links[0])
 }
+
+
+func (s *MySuite) TestLeftLeftRotateRight(c *C) {
+	fmt.Println("---- check right rotation ---- ")
+	rb := NewTree()
+	ten := rb.Insert(10)
+	nine := rb.Insert(9)
+	eight := rb.Insert(8)
+
+	rb.Print()
+	rb.RotateRight(ten)
+
+	c.Check(rb.root, Equals, nine)
+	c.Check(rb.root.links[0], Equals, eight)
+	c.Check(rb.root.links[1], Equals, ten)
+}

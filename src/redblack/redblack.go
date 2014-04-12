@@ -1,6 +1,7 @@
 package redblack
 import (
 	"fmt"
+	"strings"
 )
 
 /*
@@ -44,6 +45,7 @@ func (rb *RedBlackTree) RotateLeft(n *Node) {
 	n.Rotate(0)
 	if n == rb.root {
 		// no longer the root, stupid, the parent is
+		fmt.Printf("Setting new root to %v\n", n.parent)
 		rb.root = n.parent
 	}
 }
@@ -51,6 +53,7 @@ func (rb *RedBlackTree) RotateRight(n *Node) {
 	n.Rotate(1)
 	if n == rb.root {
 		// no longer the root, stupid, the parent is
+		fmt.Printf("Setting new root to %v\n", n.parent)
 		rb.root = n.parent
 	}
 }
@@ -202,27 +205,39 @@ func (n *Node) Insert(value int) *Node {
 
 func (n *Node) Rotate(dir int8) {
 	// dir is direction, 0 left, 1 right
+	// we're going to pretend this is a left rotation
+
 	fmt.Println("Rotation on ", n.value, dir)
-	opposite_child := n.links[not(dir)]
-	affected_grandchild := opposite_child.links[dir]
+
+	right_child := n.links[not(dir)]
 	parent := n.parent
 
-	fmt.Printf("setting %v child of %v -> %v\n", not(dir), n.value, affected_grandchild)
+	left := dir
+	right := not(dir)
+	var parent_link int
 
-	n.links[not(dir)] = affected_grandchild
-
-	if opposite_child != nil {
-		fmt.Printf("setting parent of %v to %v\n", opposite_child.value, n.parent.value)
-		opposite_child.parent = n.parent
+	if parent != nil {
+		if parent.links[0] == n {
+			parent_link = 0
+		} else {
+			parent_link = 1
+		}
 	}
-	fmt.Printf("setting %v child of %v to %v", dir, parent.value, opposite_child.value)
-	parent.links[dir] = opposite_child
 
-	opposite_child.links[dir] = n
-	n.parent = opposite_child
+	// n becomes a left child of it's previous right child
+	// n takes as right child right_child old left_child
+	// right child new parent is n's previous parent (still referred to as parent)
 
+	n.links[right] = right_child.links[left]
+	right_child.links[left] = n
+	right_child.parent = parent
+	if parent != nil {
+		parent.links[parent_link] = right_child
+	}
+	n.parent = right_child
 
 }
+
 
 func not(i int8) int8 {
 	// stupid utility to flip 1/0 since we can't do !int checks
@@ -251,4 +266,28 @@ func (n *Node) IsBalanced() bool {
 
 func is_red(n *Node) bool {
 	return n != nil && n.red == 1
+}
+
+
+func (t *RedBlackTree) Print() {
+	t.root.Print(0)
+}
+
+func (n *Node) Print(depth int) {
+	fmt.Printf("%s%v %s\n", strings.Repeat(" ", depth),  n.value, color(n.red))
+
+	if n.links[0] != nil {
+		n.links[0].Print(depth + 1)
+	}
+	if n.links[1] != nil {
+		n.links[1].Print(depth + 1)
+	}
+}
+
+func color(red int8) string {
+	if red == 1 {
+		return "red"
+	} else {
+		return "black"
+	}
 }
