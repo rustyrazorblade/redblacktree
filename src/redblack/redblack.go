@@ -2,6 +2,8 @@ package redblack
 import (
 	"fmt"
 	"strings"
+	"os"
+	"io"
 )
 
 /*
@@ -309,6 +311,21 @@ func (n *Node) Print(depth int) {
 		n.links[1].Print(depth + 1)
 	}
 }
+
+func (t *RedBlackTree) Draw(f string) error {
+	// writes out a dot file to location f
+
+	if fp, err := os.Create(f); err == nil {
+		io.WriteString(fp, " digraph G { \n")
+		// write the nodes
+		io.WriteString(fp, "} \n")
+		fp.Close()
+		return nil
+	} else {
+		return err
+	}
+}
+
 
 func color(red int8) string {
 	if red == 1 {

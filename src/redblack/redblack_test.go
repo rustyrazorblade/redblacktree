@@ -215,7 +215,7 @@ func (s *MySuite) TestBlackCount(c *C) {
 
 }
 
-var nodes int = 100
+var nodes int = 20
 func (s *MySuite) TestGiantRedBlackTree(c *C) {
 	t := NewRedBlackTree()
 	for k := 0; k < nodes; k++ {
@@ -227,5 +227,9 @@ func (s *MySuite) TestGiantTree(c *C) {
 	t := NewTree()
 	for k := 0; k < nodes; k++ {
 		t.Insert(k)
+	}
+
+	if t.Draw("out.dot") != nil {
+		c.Fail()
 	}
 }
