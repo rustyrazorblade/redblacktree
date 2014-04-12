@@ -158,3 +158,29 @@ func (s *MySuite) TestSideSideRotation(c *C) {
 	c.Check(rb.root, Equals, new_root)
 
 }
+
+func (s *MySuite) TestZigZagRotation(c *C) {
+	fmt.Println("---- zig zag recolor and rotate test ---- ")
+	rb := NewRedBlackTree()
+	rb.Insert(10)
+	rb.Insert(8)
+	new_root := rb.Insert(9)
+	// state of the tree
+	// 8 should be the new root
+	c.Check(rb.root, Equals, new_root)
+
+}
+
+func (s *MySuite) TestLeftRotateInZigZag(c *C) {
+	fmt.Println("---- check left rotation ---- ")
+	rb := NewTree()
+	ten := rb.Insert(10)
+	eight := rb.Insert(8)
+	nine := rb.Insert(9)
+	// state of the tree
+	// 8 should be the new root
+	c.Check(rb.root, Equals, ten)
+
+	rb.RotateLeft(eight)
+	c.Check(eight, Equals, nine.links[0])
+}

@@ -101,13 +101,26 @@ func (t *RedBlackTree) fixUp(n *Node) {
 		// left rotation is 0
 		fmt.Println("zig zag detected", parent_node_side, this_node_side)
 		t.Rotate(parent, parent_node_side)
+		// recolor
 		// replace the fixup
-		// t.fixUp(parent)
+		t.caseFive(n.links[parent_node_side])
 		return
 	}
+	t.caseFive(n)
 
+}
+
+func (t *RedBlackTree) caseFive(n *Node) {
 	// case 5
 	// detect a LEFT LEFT or RIGHT RIGHT
+	fmt.Println("executing case 5 rotation on ", n)
+	parent := n.parent
+	gp := parent.parent
+
+	uncle_op_side := btoi(gp.links[0] == parent)
+	this_node_side := btoi(parent.links[1] == n)
+	parent_node_side := not(uncle_op_side)
+
 	if this_node_side == parent_node_side {
 		fmt.Println("Detected case 5, LEFT LEFT")
 		fmt.Println(this_node_side, parent_node_side)
@@ -120,11 +133,11 @@ func (t *RedBlackTree) fixUp(n *Node) {
 		fmt.Println("GP fixed color %v", gp.red)
 		return
 	}
-
 }
 
 func recolor(n *Node, red int8) {
 	if n != nil {
+		fmt.Println("recolor value / is_red", n.value, red)
 		n.red = red
 	}
 }
@@ -192,9 +205,22 @@ func (n *Node) Rotate(dir int8) {
 	fmt.Println("Rotation on ", n.value, dir)
 	opposite_child := n.links[not(dir)]
 	affected_grandchild := opposite_child.links[dir]
+	parent := n.parent
+
+	fmt.Printf("setting %v child of %v -> %v\n", not(dir), n.value, affected_grandchild)
+
 	n.links[not(dir)] = affected_grandchild
-	opposite_child.parent = n.parent
+
+	if opposite_child != nil {
+		fmt.Printf("setting parent of %v to %v\n", opposite_child.value, n.parent.value)
+		opposite_child.parent = n.parent
+	}
+	fmt.Printf("setting %v child of %v to %v", dir, parent.value, opposite_child.value)
+	parent.links[dir] = opposite_child
+
+	opposite_child.links[dir] = n
 	n.parent = opposite_child
+
 
 }
 
