@@ -215,17 +215,23 @@ func (s *MySuite) TestBlackCount(c *C) {
 
 }
 
-var nodes int = 20
+var nodes int = 100
 func (s *MySuite) TestGiantRedBlackTree(c *C) {
 	t := NewRedBlackTree()
-	for k := 0; k < nodes; k++ {
+	for k := 0; k <= nodes; k++ {
 		t.Insert(k)
+	}
+	if t.Draw("balanced.dot") != nil {
+		c.Fail()
+	}
+	if !t.IsBalanced() {
+		c.Fail()
 	}
 }
 
 func (s *MySuite) TestGiantTree(c *C) {
 	t := NewTree()
-	for k := 0; k < nodes; k++ {
+	for k := 0; k <= nodes; k++ {
 		t.Insert(k)
 	}
 
@@ -233,3 +239,18 @@ func (s *MySuite) TestGiantTree(c *C) {
 		c.Fail()
 	}
 }
+
+
+func (s *MySuite) TestBasicRecoloring(c *C) {
+	t := NewRedBlackTree()
+	for i := 0; i < 4; i++ {
+		t.Insert(i)
+	}
+
+//	c.Check(t.Get(0).red, Equals, 0)
+//	c.Check(t.Get(1).red, Equals, 0)
+//	c.Check(t.Get(2).red, Equals, 0)
+	n, _ := t.Get(3)
+	c.Check(n.red, Equals, int8(1))
+}
+

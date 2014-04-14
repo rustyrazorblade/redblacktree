@@ -67,6 +67,7 @@ func (t *RedBlackTree) Rotate(n *Node, dir int8) {
 func (t *RedBlackTree) fixUp(n *Node) {
 	if n.parent == nil {
 		// root case
+		n.red = 0
 		return
 	}
 	if !is_red(n.parent) {
@@ -78,18 +79,18 @@ func (t *RedBlackTree) fixUp(n *Node) {
 	parent := n.parent
 	gp := parent.parent
 
+
 	uncle_op_side := btoi(gp.links[0] == parent)
 
 	uncle := gp.links[uncle_op_side]
 
-	if is_red(uncle) { // we know the parent is red already
+	if is_red(uncle) { // we know the parent is red already (red parent & uncle, black GP)
 		// case 3 recolor
 		// repaint parent & uncle black, gp red
 		// then fixUp(gp)
 		recolor(parent,  0)
 		recolor(uncle, 0)
-		recolor(parent, 1)
-
+		recolor(gp, 1)
 		t.fixUp(gp)
 		return
 	}
@@ -127,9 +128,8 @@ func (t *RedBlackTree) caseFive(n *Node) {
 		t.Rotate(gp, not(this_node_side))
 		recolor(parent, 0)
 		recolor(gp, 1)
-		t.fixUp(gp)
-		return
 	}
+	t.fixUp(gp)
 }
 
 func recolor(n *Node, red int8) {
@@ -318,6 +318,7 @@ func (t *RedBlackTree) Draw(f string) error {
 	if fp, err := os.Create(f); err == nil {
 		io.WriteString(fp, " digraph G { \n")
 		// write the nodes
+		t.root.Draw(fp)
 		io.WriteString(fp, "} \n")
 		fp.Close()
 		return nil
@@ -326,6 +327,18 @@ func (t *RedBlackTree) Draw(f string) error {
 	}
 }
 
+func (n *Node) Draw(fp *os.File) {
+	// write the 2 children, call recursively
+	fmt.Fprintf(fp, "%d [color=%s];\n", n.value, color(n.red))
+	for i := 0; i < 2; i++ {
+		if n.links[i] != nil {
+			fmt.Fprintf(fp, "%d -> %d;\n ", n.value, n.links[i].value)
+			n.links[i].Draw(fp)
+		}
+
+	}
+
+}
 
 func color(red int8) string {
 	if red == 1 {
