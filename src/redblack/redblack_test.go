@@ -254,3 +254,21 @@ func (s *MySuite) TestBasicRecoloring(c *C) {
 	c.Check(n.red, Equals, int8(1))
 }
 
+func (s *MySuite) TestSingleItemDeletionFound(c *C) {
+	t := NewTree()
+	t.Insert(10)
+	result := t.Delete(10)
+	c.Check(result, Equals, true)
+	if _, ok := t.Get(10); ok {
+		c.Fail()
+	}
+
+}
+
+func (s *MySuite) TestSingleItemDeletionNotFound(c *C) {
+	t := NewTree()
+	t.Insert(10)
+	result := t.Delete(10)
+	c.Check(result, Equals, true)
+
+}

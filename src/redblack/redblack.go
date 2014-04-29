@@ -64,6 +64,18 @@ func (t *RedBlackTree) Rotate(n *Node, dir int8) {
 	}
 	t.RotateRight(n)
 }
+
+func (t *RedBlackTree) Delete(value int) bool {
+	// returns true if a value was deleted
+	_, ok := t.Get(value)
+	if ok {
+
+		return true
+	}
+	return false
+}
+
+
 func (t *RedBlackTree) fixUp(n *Node) {
 	if n.parent == nil {
 		// root case
