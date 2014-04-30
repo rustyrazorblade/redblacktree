@@ -75,6 +75,15 @@ func (t *RedBlackTree) Delete(value int) bool {
 	return false
 }
 
+// deletion
+func sibling(node *Node) *Node {
+	if node.parent == nil {
+		return nil
+	}
+	return node.parent.links[btoi(node.parent.links[0] == node)]
+}
+
+
 
 func (t *RedBlackTree) fixUp(n *Node) {
 	if n.parent == nil {

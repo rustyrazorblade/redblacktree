@@ -254,6 +254,7 @@ func (s *MySuite) TestBasicRecoloring(c *C) {
 	c.Check(n.red, Equals, int8(1))
 }
 
+// neither of the next 2 tests will test that the tree is balanced
 func (s *MySuite) TestSingleItemDeletionFound(c *C) {
 	t := NewTree()
 	t.Insert(10)
@@ -270,5 +271,16 @@ func (s *MySuite) TestSingleItemDeletionNotFound(c *C) {
 	t.Insert(10)
 	result := t.Delete(10)
 	c.Check(result, Equals, true)
-
 }
+
+
+func (s *MySuite) TestSibling(c *C) {
+	t := NewTree()
+	t.Insert(5)
+	three := t.Insert(3)
+	seven := t.Insert(7)
+
+	tmp := sibling(three)
+	c.Check(tmp, Equals, seven)
+}
+
